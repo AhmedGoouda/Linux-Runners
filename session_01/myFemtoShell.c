@@ -13,12 +13,12 @@ int main(){
 
 void vid_promptMessage(void)
 {
-    printf("%s", "Say Something: ");
+    printf("%s", "\nSay Something: ");
 }
 
 void vid_takeUserInput(char *input)
 {
-    scanf("%s", input);
+    gets(input);
 }
 
 
@@ -31,12 +31,12 @@ unsigned char u8_checkUserInput(char *input)
 
 void vid_repeatInput(char *input)
 {
-    printf("You said: %s\n", input);
+    printf("\nYou said: %s", input);
 }
 
 void vid_exit(void)
 {
-    printf("%s", "Goodbye\n");
+    printf("%s", "\nGoodbye\n");
 }
 
 void vid_echoMessage(void)
