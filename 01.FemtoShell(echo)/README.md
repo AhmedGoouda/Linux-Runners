@@ -36,3 +36,19 @@ You said >> Goodbye
 Say Something >> exit
 GoodBye
 ```
+
+## compilation command(s) used
+
+```shell
+gcc -o myfemtoShell femtoShell.c
+```
+
+or
+
+```shell
+gcc -o myfemtoShell prog.c main.c 
+```
+
+> Please Note Below:
+
+You can view all the code combined in the file 'femtoShell.c`, or divided in the other files.

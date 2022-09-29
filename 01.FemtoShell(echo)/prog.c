@@ -29,8 +29,8 @@ int int_getUserInput(char *prompt, char* inputBuff, size_t inputBuffSize) {
     return OK_INPUT;
 }
 
-int int_echoUserInput(char *inputBuff) {
-    int getInputRetValue = int_getUserInput("Say Something >> ", inputBuff, INPUT_BUFF_SIZE);
+int int_echoUserInput(char *inputBuff, size_t inputBuffSize) {
+    int getInputRetValue = int_getUserInput("Say Something >> ", inputBuff, inputBuffSize);
     
     if (!strcmp(inputBuff, EXIT_KEYWORD)) {
         printf("%s", "GoodBye\n");
@@ -41,7 +41,7 @@ int int_echoUserInput(char *inputBuff) {
         case NULL_INPUT: printf("%s", "Null Pointer\n"); break;
         case EMPTY_INPUT: /*printf("%s", "Empty Input\n");*/ break;
         case LONG_INPUT:
-            printf("Input is too long, Max length is %d\n", MAX_INPUT_SIZE);
+            printf("Too long Input.\nPlease increase the size of the input buffer, current size is %d.\n", (INPUT_BUFF_SIZE));
             break;
         case OK_INPUT:
             printf("You said >> %s\n", inputBuff);
@@ -51,11 +51,11 @@ int int_echoUserInput(char *inputBuff) {
     return getInputRetValue;
 }
 
-int int_callEcho(char *inputBuff) {
+int int_callEcho(char *inputBuff, size_t inputBuffSize) {
     int echoRetValue;
     
     while(1) {
-        echoRetValue = int_echoUserInput(inputBuff);
+        echoRetValue = int_echoUserInput(inputBuff, inputBuffSize);
         
         if (echoRetValue == INPUT_EXIT) {
             break;

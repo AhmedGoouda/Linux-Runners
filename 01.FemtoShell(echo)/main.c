@@ -6,6 +6,6 @@
 
 
 int main() {
-    char inputBuff[MAX_INPUT_SIZE];
-    int_callEcho(inputBuff);
+    char inputBuff[INPUT_BUFF_SIZE];
+    int_callEcho(inputBuff, sizeof(inputBuff));
 }
