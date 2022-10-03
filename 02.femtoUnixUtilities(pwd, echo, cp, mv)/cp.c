@@ -1,6 +1,3 @@
-/*** Under Developing ***/
-
-
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -11,61 +8,109 @@
 #include "private.h"
 #include "interface.h"
 
-#define ARG_COUNT_ERROR         1
-#define SRC_FILE_NOT_FOUND      2
-#define DEST_FILE_ERROR         3
-#define WRITE_FILE_ERROR        4
-#define WRITE_SUCCESS           5
-#define NO_OF_READ_BYTES        100
+int int_openFile(char *filePath, int fileOption) {
 
-int main(int argc, char* argv[]) {
+    int fd;
 
-    /*Check the numer of arguments*/
-    if (argc != 3) {
+    if (fileOption == READ_ONLY_MODE) {
 
-        printf("%s", "Not Enough Arguments\n");
-        return ARG_COUNT_ERROR;
+        fd = open(filePath, O_RDONLY);
+    }
+    else if (fileOption == READ_WRITE_MODE) {
+
+        fd = open(filePath, O_WRONLY|O_CREAT, 0644);
+    }
+    else {
+        return WRONG_OPTION;
     }
 
-    /*Open source File*/
-    int sourceFile_fd = open(argv[1], O_RDONLY);
-
-    if (sourceFile_fd == (-1)) {
+    if (fd == -1) {
 
         return SRC_FILE_NOT_FOUND;
     }
     else {
 
-        //return sourceFile_fd;
-        printf("%s", "SRC Opened\n");
+        return fd;
     }
+}
 
-    /*Open or Creat and Open the destination file*/
-    int destinationFile_fd = open(argv[2], O_WRONLY|O_CREAT, 0644);
 
-    if (destinationFile_fd == (-1)) {
+int int_closeFile(int fd) {
 
-        return DEST_FILE_ERROR;
-    }
-    else {
+    if (close(fd) == -1) {
 
-        //return destinationFile_fd;
-        printf("%s", "Dest Created\n");
-    }
-
-    char srcFileBuff[NO_OF_READ_BYTES];
-    long int numberOfReadBytes = read(sourceFile_fd, srcFileBuff, sizeof(srcFileBuff));
-
-    /*Write in Destination File*/
-    int writeFlag = write(destinationFile_fd, srcFileBuff, numberOfReadBytes);
-
-    if (writeFlag == (-1)) {
-
-        return WRITE_FILE_ERROR;
+        return CLOSE_FILE_ERROR;
     }
     else {
-        
-        printf("%s", "Write Success\n");
-        return WRITE_SUCCESS;
+        return FILE_CLOSED;
     }
+}
+
+
+int int_readFile(char *filePath, char *readBuff, size_t readBuffSize) {
+
+    static int src_fd;
+    static unsigned char srcFileStatus = SOURCE_FILE_CLOSED;
+    int readCharsCount;
+
+    if (srcFileStatus == SOURCE_FILE_CLOSED) {
+
+        src_fd = int_openFile(filePath, READ_ONLY_MODE);
+        srcFileStatus = SOURCE_FILE_OPENED;
+    }
+
+    readCharsCount = read(src_fd, readBuff, readBuffSize);
+
+    if (readCharsCount == 0) {
+
+        srcFileStatus = int_closeFile(src_fd);
+    }
+
+    return readCharsCount == -1 ? READ_FILE_ERROR : readCharsCount;
+}
+
+
+int int_writeFile(char *filePath, char *writeBuff, size_t writeBuffCount) {
+
+    static int dest_fd;
+    static unsigned char destFileStatus = DEST_FILE_CLOSED;
+    int writeCharsCount;
+
+    if (destFileStatus == DEST_FILE_CLOSED) {
+
+        dest_fd = int_openFile(filePath, READ_WRITE_MODE);
+        destFileStatus = DEST_FILE_OPENED;
+    }
+
+    writeCharsCount = write(dest_fd, writeBuff, writeBuffCount);
+
+    if (writeCharsCount == 0) {
+
+        destFileStatus = close(dest_fd);
+    }
+
+    return writeCharsCount == -1 ? WRITE_FILE_ERROR : writeCharsCount;
+}
+
+
+int int_copyFile(int argc, char *argv[]) {
+
+    char copyBuff[COPY_BUFF_SIZE];
+
+    int readCharsCount = 1;
+    int writeCharCount;
+
+    if (argc != 3) {
+
+        printf("%s", "Not Enough Arguments. It should be three.\n");
+        return CP_ARG_COUNT_ERROR;
+    }
+
+    while (readCharsCount != 0) {
+
+        readCharsCount = int_readFile(argv[1], copyBuff, sizeof(copyBuff));
+        writeCharCount = int_writeFile(argv[2], copyBuff, readCharsCount);
+    }
+
+    return readCharsCount == writeCharCount ? COPY_DONE : COPY_ERROR;
 }

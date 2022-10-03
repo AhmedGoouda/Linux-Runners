@@ -4,7 +4,7 @@
 #include "private.h"
 #include "interface.h"
 
-#define SELECTED_MAN 2
+#define SELECTED_MAN 4
 
 #if SELECTED_MAN == 1
 int main() {
@@ -13,9 +13,23 @@ int main() {
 }
 
 #elif SELECTED_MAN == 2
-int main() {
+int main(int argc, char *argv[]) {
 
-    char cwd[MAX_LEN_OF_WD];
-    int_pwd(cwd, sizeof(cwd));
+    int_pwd(argc);
 }
+
+
+#elif SELECTED_MAN == 3
+int main(int argc, char *argv[]) {
+
+    int_copyFile(argc, argv);
+}
+
+#elif SELECTED_MAN == 4
+int main(int argc, char *argv[]) {
+
+    int_moveFile(argc, argv);
+}
+
+
 #endif
