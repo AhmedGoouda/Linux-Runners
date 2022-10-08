@@ -107,10 +107,25 @@ localVar[1]: y = 11
 localVar[2]: z = 12
 It's the femto shell >> 
 It's the femto shell >> 
+It's the femto shell >> env
+...
+...
+LC_NUMERIC=en_US.UTF-8
+_=/home/ahmed/Data/LinuxRunners/Github/Linux-Runners/03.FemtoShell_Extension#1/femtoShell
+It's the femto shell >>
 It's the femto shell >> fexport x
+It's the femto shell >> fexport z
 It's the femto shell >> 
 It's the femto shell >> fexport xyz
 Couldn't export [xyz], variable doesn't exist.
+It's the femto shell >> 
+It's the femto shell >> env
+...
+...
+LC_NUMERIC=en_US.UTF-8
+_=/home/ahmed/Data/LinuxRunners/Github/Linux-Runners/03.FemtoShell_Extension#1/femtoShell
+x=10
+z=12
 It's the femto shell >> 
 It's the femto shell >> fecho Thanks Eng. Reda
 Thanks Eng. Reda 
